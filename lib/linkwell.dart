@@ -13,7 +13,7 @@ class LinkWell extends StatelessWidget {
 
   String text;
   TextStyle style;
-  TextStyle linkStyle = TextStyle(color: Colors.blue);
+  TextStyle linkStyle;
   TextAlign textAlign;
 
   List widgets = <TextSpan>[];
@@ -22,16 +22,30 @@ class LinkWell extends StatelessWidget {
     if(this.text == null){
       throw "text is required";
     } else {
-      _check();
-      _buildBody();
+      if(linkStyle == null){
+        linkStyle = TextStyle(color: Colors.blue);
+      }
+      if(style == null){
+        style = TextStyle(color: Colors.black);
+      }
+      initialize();
     }
   }
 
-  _check() {
+  initialize() {
     Iterable<RegExpMatch> matches = exp.allMatches(this.text);
     matches.forEach((match) {
       this.links.add(text.substring(match.start, match.end));
     });
+    if(links.isNotEmpty){
+      _buildBody();
+    } else {
+      _buildNormalText();
+    }
+  }
+
+  _buildNormalText() {
+    widgets.add(TextSpan(text: this.text, style: style));
   }
 
   _buildBody() async {
@@ -41,7 +55,7 @@ class LinkWell extends StatelessWidget {
       print(wid);
       if (wid[0] != '') {
         var text =
-        TextSpan(text: wid[0], style: TextStyle(color: Colors.black));
+        TextSpan(text: wid[0], style: style);
         if (value.toString().contains('@') && !value.toString().contains('/')) {
           //and
           final Uri params = Uri(
@@ -52,7 +66,7 @@ class LinkWell extends StatelessWidget {
 
           var link = TextSpan(
               text: value,
-              style: TextStyle(color: Colors.blue),
+              style: linkStyle,
               recognizer: new TapGestureRecognizer()
                 ..onTap = () => launch(url));
           widgets.add(text);
@@ -65,7 +79,7 @@ class LinkWell extends StatelessWidget {
               : 'http://' + value;
           var link = TextSpan(
               text: value,
-              style: TextStyle(color: Colors.blue),
+              style: linkStyle,
               recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
           widgets.add(text);
           widgets.add(link);
