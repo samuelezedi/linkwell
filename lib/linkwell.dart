@@ -56,34 +56,36 @@ class LinkWell extends StatelessWidget {
       if (wid[0] != '') {
         var text =
         TextSpan(text: wid[0], style: style);
-        if (value.toString().contains('@') && !value.toString().contains('/')) {
-          //and
-          final Uri params = Uri(
-            scheme: 'mailto',
-            path: value,
-          );
-          String  url = params.toString();
+        widgets.add(text);
+      }
 
-          var link = TextSpan(
-              text: value,
-              style: linkStyle,
-              recognizer: new TapGestureRecognizer()
-                ..onTap = () => launch(url));
-          widgets.add(text);
-          widgets.add(link);
-        } else {
-          var l = value.toString().contains('https://')
-              ? value
-              : value.toString().contains('http://')
-              ? value
-              : 'http://' + value;
-          var link = TextSpan(
-              text: value,
-              style: linkStyle,
-              recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
-          widgets.add(text);
-          widgets.add(link);
-        }
+      if (value.toString().contains('@') && !value.toString().contains('/')) {
+        //and
+        final Uri params = Uri(
+          scheme: 'mailto',
+          path: value,
+        );
+        String  url = params.toString();
+
+        var link = TextSpan(
+            text: value,
+            style: linkStyle,
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () => launch(url));
+
+        widgets.add(link);
+      } else {
+        var l = value.toString().contains('https://')
+            ? value
+            : value.toString().contains('http://')
+            ? value
+            : 'http://' + value;
+        var link = TextSpan(
+            text: value,
+            style: linkStyle,
+            recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
+
+        widgets.add(link);
       }
 
       if (wid[1] != '') {
