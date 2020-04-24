@@ -4,10 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LinkWell {
+class LinkWell extends StatelessWidget {
   //  RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
-  final RegExp exp = new RegExp(
-      r"((https?:www\.)|(https?:\/\/)|(www\.))?[\w/\-?=%.][-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
+//  (^(?:[+0]9)?[0-9]{10,12}$)
+  final RegExp exp = new RegExp(r"((https?:www\.)|(https?:\/\/)|(www\.))?[\w/\-?=%.][-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
+//  final RegExp exp = new RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
   final List links = <String>[];
 
   final String text;
@@ -23,8 +24,9 @@ class LinkWell {
   final TextWidthBasis textWidthBasis;
   final TextDirection textDirection;
   final Key key;
+  final List<String> listOfNames;
 
-  List widgets = <TextSpan>[];
+  final List widgets = <TextSpan>[];
 
   LinkWell(
       this.text, {
@@ -39,6 +41,7 @@ class LinkWell {
         this.maxLines,
         this.locale,
         this.strutStyle,
+        this.listOfNames,
         this.textWidthBasis = TextWidthBasis.parent,
       })  : assert(text != null),
         assert(textAlign != null),
@@ -72,6 +75,7 @@ class LinkWell {
 
   _buildBody() async {
     var t = this.text;
+    var index = 0;
     this.links.forEach((value) async {
       var wid = t.split(value.trim());
 
@@ -95,9 +99,15 @@ class LinkWell {
           path: value,
         );
         String url = params.toString();
+        var name = value;
+        if(this.listOfNames!=null){
+          if(this.listOfNames[index]!=null){
+            name = this.listOfNames[index];
+          }
+        }
 
         var link = TextSpan(
-            text: value,
+            text: name,
             style: linkStyle == null
                 ? TextStyle(color: Colors.blue, fontSize: 15)
                 : linkStyle,
@@ -108,8 +118,14 @@ class LinkWell {
         var l = value.toString().contains('https://')
             ? value
             : value.toString().contains('http://') ? value : 'http://' + value;
+        var name = l;
+        if(this.listOfNames!=null){
+          if(this.listOfNames[index]!=null){
+            name = this.listOfNames[index];
+          }
+        }
         var link = TextSpan(
-            text: value,
+            text: name,
             style: linkStyle == null
                 ? TextStyle(color: Colors.blue, fontSize: 15)
                 : linkStyle,
@@ -121,6 +137,7 @@ class LinkWell {
       if (wid[1] != '') {
         t = wid[1];
       }
+      index++;
     });
   }
 
