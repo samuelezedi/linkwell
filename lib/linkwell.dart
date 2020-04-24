@@ -9,30 +9,24 @@ class LinkWell extends StatelessWidget {
 
   //  RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
   final RegExp exp = new RegExp(r"((https?:www\.)|(https?:\/\/)|(www\.))?[\w/\-?=%.][-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
-  List links = <String>[];
+  final List links = <String>[];
 
-  String text;
-  TextStyle style;
-  TextStyle linkStyle;
-  TextAlign textAlign;
+  final String text;
+  final TextStyle style;
+  final TextStyle linkStyle;
+  final TextAlign textAlign;
 
   List widgets = <TextSpan>[];
 
-  LinkWell({@required this.text, this.linkStyle, this.textAlign, this.style}) {
+  LinkWell({@required this.text, this.linkStyle, this.textAlign, this.style}) : assert(text != null) {
     if(this.text == null){
       throw "text is required";
     } else {
-      if(linkStyle == null){
-        linkStyle = TextStyle(color: Colors.blue);
-      }
-      if(style == null){
-        style = TextStyle(color: Colors.black);
-      }
-      initialize();
+      _initialize();
     }
   }
 
-  initialize() {
+  _initialize() {
     Iterable<RegExpMatch> matches = exp.allMatches(this.text);
     matches.forEach((match) {
       this.links.add(text.substring(match.start, match.end));
@@ -45,7 +39,7 @@ class LinkWell extends StatelessWidget {
   }
 
   _buildNormalText() {
-    widgets.add(TextSpan(text: this.text, style: style));
+    widgets.add(TextSpan(text: this.text, style: style == null ? TextStyle(color: Colors.black, fontSize: 15): style));
   }
 
   _buildBody() async {
@@ -55,7 +49,7 @@ class LinkWell extends StatelessWidget {
       print(wid);
       if (wid[0] != '') {
         var text =
-        TextSpan(text: wid[0], style: style);
+        TextSpan(text: wid[0], style: style == null ? TextStyle(color: Colors.black, fontSize: 15): style);
         widgets.add(text);
       }
 
@@ -69,7 +63,7 @@ class LinkWell extends StatelessWidget {
 
         var link = TextSpan(
             text: value,
-            style: linkStyle,
+            style: linkStyle == null ? TextStyle(color: Colors.black, fontSize: 15): linkStyle,
             recognizer: new TapGestureRecognizer()
               ..onTap = () => launch(url));
 
@@ -82,7 +76,7 @@ class LinkWell extends StatelessWidget {
             : 'http://' + value;
         var link = TextSpan(
             text: value,
-            style: linkStyle,
+            style: linkStyle == null ? TextStyle(color: Colors.black, fontSize: 15): linkStyle,
             recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
 
         widgets.add(link);
