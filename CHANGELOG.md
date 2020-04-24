@@ -1,3 +1,8 @@
+## [0.1.1+5]
+
+* Created more properties in the LinkWell Class
+* Added Example project
+
 ## [0.1.1+2]
 
 * Error in LinkWell Class fixed
