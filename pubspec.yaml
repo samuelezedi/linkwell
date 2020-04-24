@@ -1,8 +1,7 @@
 name: linkwell
 description: LinkWell is a Text widget that highlight all the links in the text which then navigates the user to the URL when tapped.
-version: 0.0.1
-author:
-homepage:
+version: 0.1.1
+homepage: https://github.com/samuelezedi/linkwell
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
