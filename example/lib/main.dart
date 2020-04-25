@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:linkwell/linkwell.dart';
 
 void main() => runApp(MyApp());
 
@@ -48,12 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 10,
                   ),
                   LinkWell(
-                    "By registering you agree to our samuelezedi.com/terms and samuelezedi.com/privacy",
-                    listOfNames: {
-                      'samuelezedi.com/terms' : 'Terms',
-                      'samuelezedi.com/privacy' : 'Privacy Policy'
-                    },
-                    textAlign: TextAlign.center,
+                    "Hi here's my email: samuelezedi@gmail.com and website: https://samuelezedi.com",
                   )
                 ],
               ),
