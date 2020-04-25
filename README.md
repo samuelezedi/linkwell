@@ -10,7 +10,7 @@ LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped
 
 | Basic Usage | Named Links |
 | ------------- | ------------- |
-| <image width="200" src="https://raw.githubusercontent.com/samuelezedi/linkwell/master/example/assets/images/sc2.jpeg"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/linkwell/master/example/assets/images/sc.jpeg"> |
+| <image width="200" src="https://raw.githubusercontent.com/samuelezedi/linkwell/master/example/assets/images/sc.jpeg"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/linkwell/master/example/assets/images/sc2.jpeg"> |
 
 
 ## Usage
