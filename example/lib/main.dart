@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 10,
                   ),
                   LinkWell(
-                    "Hi here's my email: samuelezedi@gmail.com and website: https://samuelezedi.com",
+                    "Hi here's my email: samuelezedi@gmail.com and website: https://pronoun.com.ng",
                   )
                 ],
               ),

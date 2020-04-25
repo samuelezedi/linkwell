@@ -103,21 +103,21 @@ class LinkWell extends StatelessWidget {
 
   /// LinkWell class is constructed here
   LinkWell(
-    this.text, {
-    this.key,
-    this.style,
-    this.linkStyle,
-    this.textAlign = TextAlign.start,
-    this.textDirection,
-    this.softWrap = true,
-    this.overflow = TextOverflow.clip,
-    this.textScaleFactor = 1.0,
-    this.maxLines,
-    this.locale,
-    this.strutStyle,
-    this.listOfNames,
-    this.textWidthBasis = TextWidthBasis.parent,
-  })  : assert(text != null),
+      this.text, {
+        this.key,
+        this.style,
+        this.linkStyle,
+        this.textAlign = TextAlign.start,
+        this.textDirection,
+        this.softWrap = true,
+        this.overflow = TextOverflow.clip,
+        this.textScaleFactor = 1.0,
+        this.maxLines,
+        this.locale,
+        this.strutStyle,
+        this.listOfNames,
+        this.textWidthBasis = TextWidthBasis.parent,
+      })  : assert(text != null),
         assert(textAlign != null),
         assert(softWrap != null),
         assert(overflow != null),
@@ -172,11 +172,15 @@ class LinkWell extends StatelessWidget {
   /// textSpanWidget List
   _buildBody() async {
     /// var t is assigned to class text
+
+
     var t = this.text;
 
     /// a foreach is run on all the links found
     this.links.forEach((value) async {
       /// var wid which represents widget
+
+
       var wid = t.split(value.trim());
 
       /// if not value is found after splitting
@@ -209,7 +213,7 @@ class LinkWell extends StatelessWidget {
         if (this.listOfNames != null) {
           if (this.listOfNames.containsKey(value)) {
             name = (this.listOfNames[value] != null ||
-                    this.listOfNames[value] != '')
+                this.listOfNames[value] != '')
                 ? this.listOfNames[value]
                 : value;
           }
@@ -233,7 +237,7 @@ class LinkWell extends StatelessWidget {
         if (this.listOfNames != null) {
           if (this.listOfNames.containsKey(value)) {
             name = (this.listOfNames[value] != null ||
-                    this.listOfNames[value] != '')
+                this.listOfNames[value] != '')
                 ? this.listOfNames[value]
                 : value;
           }
@@ -249,8 +253,21 @@ class LinkWell extends StatelessWidget {
       }
 
       if (wid[1] != '') {
-        t = wid[1];
+        if(value == links.last){
+          var text = TextSpan(
+            text: wid[1],
+            style: style == null ? Helper.defaultTextStyle : style,
+          );
+
+          /// added
+          textSpanWidget.add(text);
+
+        } else {
+          t = wid[1];
+        }
+
       }
+
     });
   }
 
