@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text(
                 """My website url: https://blasanka.github.io/ Google sam@mail.com search +2348108312219 medium.com/@samuelezedi using: www.google.com, social gdk@gmail.com media is facebook.com, http://example.com/method?param=flutter stackoverflow.com is my greatest website. DartPad share: https://github.com/dart-lang/dart-pad/wiki/Sharing-Guide see this example and edit it here """
               ),
-              LinkWell("Here I am samuel@ezedi.comm +2348108312219", textAlign: TextAlign.start,)
+              LinkWell("Here I am samuel@ezedi.comm", textAlign: TextAlign.start,)
             ],
           ),
         
