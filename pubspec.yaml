@@ -1,5 +1,5 @@
 name: linkwell
-description: LinkWell is a Text widget that highlight all the links in the text which then navigates the user to the URL when tapped.
+description: LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped opens in users browsers,
 version: 0.1.2
 authors:
   - samuelezedi@gmail.com

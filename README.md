@@ -8,10 +8,10 @@ LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped
 
 ## ScreenShots
 
-![Basic Usage](https://raw.githubusercontent.com/samuelezedi/linkwell/master/assets/images/sc2.jpeg)
+![Basic Usage](https://raw.githubusercontent.com/samuelezedi/linkwell/master/example/assets/images/sc2.jpeg)
 Basic Usage
 
-![Names Links](https://raw.githubusercontent.com/samuelezedi/linkwell/master/assets/images/sc.jpeg)
+![Names Links](https://raw.githubusercontent.com/samuelezedi/linkwell/example/master/assets/images/sc.jpeg)
 Named Links
 
 ## Usage
@@ -62,7 +62,13 @@ listOfNames: {
 
 ## Why I made this plugin
 
-I was building a chat application and I need something to detect when user post links and email
+I was building a chat application and I need something to detect when users posted links and emails
 so I went online and found a couple plugin but they only one fit the need, I imported it and discovered
 that it could not detect emails correctly and it long urls fully and finally I could not name URLs or emails, So I built LinkWell.
 I hope this is what you are looking for and it solves your link problems.
+
+## Kindly follow me on
+[twitter](https://twitter.com/samuelezedi)
+[medium](https://medium.com/@samuelezedi)
+[instagram](https://instagram.com/samuelezedi)
+
