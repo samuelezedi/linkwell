@@ -1,6 +1,6 @@
 name: linkwell
 description: LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped opens in users browsers,
-version: 0.1.4
+version: 0.1.5
 authors:
   - samuelezedi@gmail.com
 homepage: https://github.com/samuelezedi/linkwell
