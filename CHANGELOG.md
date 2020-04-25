@@ -1,4 +1,4 @@
-## [0.1.8]
+## [0.1.9]
 
 * Corrected a error, text after every last link was not captured, FIXED
 
