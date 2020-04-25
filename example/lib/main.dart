@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   LinkWell(
                     "By registering you agree to our samuelezedi.com/terms and samuelezedi.com/privacy",
                     listOfNames: {
-                      'samuelezedi.com/terms' : 'Terms and Conditions',
+                      'samuelezedi.com/terms' : 'Terms',
                       'samuelezedi.com/privacy' : 'Privacy Policy'
                     },
                     textAlign: TextAlign.center,
