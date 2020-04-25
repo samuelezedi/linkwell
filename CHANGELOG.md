@@ -1,3 +1,11 @@
+## [0.1.3]
+
+* Commented on all LinkWell propeties and methods
+* Added Readme.md
+* Formatted Code
+* Fixed Bug Issues
+
+
 ## [0.1.2]
 
 * Commented on all LinkWell propeties and methods
