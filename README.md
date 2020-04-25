@@ -2,7 +2,7 @@
 
 LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped opens in user browsers,
 
-# `linkwell` [![pub package](https://img.shields.io/badge/pub-0.1.2-brightgreen)](https://pub.dartlang.org/packages/linkwell)
+# `linkwell` [![pub package](https://img.shields.io/badge/pub-0.1.4-brightgreen)](https://pub.dartlang.org/packages/linkwell)
 
 [GitHub](https://github.com/samuelezedi/linkwell)
 
