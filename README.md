@@ -2,7 +2,7 @@
 
 LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped opens in user browsers,
 
-# `linkwell` [![pub package](https://img.shields.io/badge/pub-0.1.5-brightgreen)](https://pub.dartlang.org/packages/linkwell)
+# `linkwell` [![pub package](https://img.shields.io/badge/pub-0.1.6-brightgreen)](https://pub.dartlang.org/packages/linkwell)
 
 [GitHub](https://github.com/samuelezedi/linkwell)
 
@@ -43,7 +43,7 @@ To add style to non links
 ```dart
 LinkWell(
     "Hi here's my email: samuelezedi@gmail.com and website: https://samuelezedi.com",
-    style: TextStyle(color: Colors.blue,fontSize: 17)
+    style: TextStyle(color: Colors.black,fontSize: 17)
 );
 ```
 

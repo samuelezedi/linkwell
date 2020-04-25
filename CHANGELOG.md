@@ -1,4 +1,4 @@
-## [0.1.5]
+## [0.1.6]
 
 * Commented on all LinkWell propeties and methods
 * Added Readme.md
