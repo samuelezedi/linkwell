@@ -1,5 +1,6 @@
 
 import 'package:example/b.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -37,37 +38,29 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       
-      body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              LinkWell(
-                "By Registering you agree to our samuelezedi.com/terms and samuelezedi.com/privacy",
-                listOfNames: {
-                  'samuelezedi.com/terms' : 'Terms and Conditions',
-                  'samuelezedi.com/privacy' : 'Privacy Policy'
-                },
-                linkStyle: TextStyle(color: Colors.green),
+      body: Container(
+        child:  Center(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  SizedBox(
+                    height: 10,
+                  ),
+                  LinkWell(
+                    "By registering you agree to our samuelezedi.com/terms and samuelezedi.com/privacy",
+                    listOfNames: {
+                      'samuelezedi.com/terms' : 'Terms and Conditions',
+                      'samuelezedi.com/privacy' : 'Privacy Policy'
+                    },
+                    textAlign: TextAlign.center,
+                  )
+                ],
               ),
-              LinkWell(
-                  """My website url: https://blasanka.github.io/ Google sam@mail.com search medium.com/@samuelezedi using: www.google.com, social gdk@gmail.com media is facebook.com, http://example.com/method?param=flutter stackoverflow.com is my greatest website. DartPad share: https://github.com/dart-lang/dart-pad/wiki/Sharing-Guide see this example and edit it here """,
-                listOfNames: {
-                    'https://blasanka.github.io/': 'Blasank',
-                    'sam@mail.com' : 'My Email'
-                },
-                linkStyle: TextStyle(color: Colors.green,fontSize: 17),
-                style: TextStyle(color: Colors.pink,fontWeight: FontWeight.bold, fontSize: 17),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                """My website url: https://blasanka.github.io/ Google sam@mail.com search +2348108312219 medium.com/@samuelezedi using: www.google.com, social gdk@gmail.com media is facebook.com, http://example.com/method?param=flutter stackoverflow.com is my greatest website. DartPad share: https://github.com/dart-lang/dart-pad/wiki/Sharing-Guide see this example and edit it here """
-              ),
-              LinkWell("Here I am samuel@ezedi.comm", textAlign: TextAlign.start,)
-            ],
-          ),
-        
+        ),
+
+
       ),
     );
   }
