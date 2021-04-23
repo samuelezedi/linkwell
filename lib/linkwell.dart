@@ -26,23 +26,23 @@ class LinkWell extends StatelessWidget {
 
   /// This hold all Names of links provided by the User
   /// this is set to null by default
-  final Map<String, String> listOfNames;
+  final Map<String, String>? listOfNames;
 
   /// This hold TextSpan Widgets List
   /// which is then placed as child in the RichText Widget
-  final List textSpanWidget = <TextSpan>[];
+  final List<InlineSpan> textSpanWidget = <TextSpan>[];
 
   /// This hold the text the user provides
   final String text;
 
   /// This hold user defined styling
   /// It's an instanciation of Flutter Widget TextStyle
-  final TextStyle style;
+  final TextStyle? style;
 
   /// This hold user defined styling
   /// for the links
   /// It's also an instanciation of Flutter Widget TextStyle
-  final TextStyle linkStyle;
+  final TextStyle? linkStyle;
 
   /// This hold user defined textAlignment
   /// It's also an instanciation of Flutter Widget TextAlign
@@ -53,13 +53,13 @@ class LinkWell extends StatelessWidget {
   /// because LinkWell makes user of Flutter RichText Widget
   /// it also gives user the option to create max lines
   /// it can take a default value of null
-  final int maxLines;
+  final int? maxLines;
 
   /// This hold user defined locale
   /// because LinkWell makes user of Flutter RichText Widget
   /// it also gives user the option to define textOverflow
   /// by default this is set to TextOverflow.clip
-  final Locale locale;
+  final Locale? locale;
 
   /// This hold user defined overflow
   /// because LinkWell makes user of Flutter RichText Widget
@@ -71,7 +71,7 @@ class LinkWell extends StatelessWidget {
   /// because LinkWell makes user of Flutter RichText Widget
   /// it also gives user the option to create strutstyle
   /// by default can also be null
-  final StrutStyle strutStyle;
+  final StrutStyle? strutStyle;
 
   /// This hold user defined softWrap
   /// because LinkWell makes user of Flutter RichText Widget
@@ -95,11 +95,11 @@ class LinkWell extends StatelessWidget {
   /// because LinkWell makes user of Flutter RichText Widget
   /// it also gives user the option to create textScaleFactor
   /// by default can also be null
-  final TextDirection textDirection;
+  final TextDirection? textDirection;
 
   /// This hold user defined Widget key
   /// by default can also be null
-  final Key key;
+  final Key? key;
 
   /// LinkWell class is constructed here
   LinkWell(
@@ -209,10 +209,10 @@ class LinkWell extends StatelessWidget {
         var name = value;
 
         if (this.listOfNames != null) {
-          if (this.listOfNames.containsKey(value)) {
-            name = (this.listOfNames[value] != null ||
-                    this.listOfNames[value] != '')
-                ? this.listOfNames[value]
+          if (this.listOfNames!.containsKey(value)) {
+            name = (this.listOfNames![value] != null ||
+                    this.listOfNames![value] != '')
+                ? this.listOfNames![value]
                 : value;
           }
         }
@@ -233,10 +233,10 @@ class LinkWell extends StatelessWidget {
         var name = l;
 
         if (this.listOfNames != null) {
-          if (this.listOfNames.containsKey(value)) {
-            name = (this.listOfNames[value] != null ||
-                    this.listOfNames[value] != '')
-                ? this.listOfNames[value]
+          if (this.listOfNames!.containsKey(value)) {
+            name = (this.listOfNames![value] != null ||
+                    this.listOfNames![value] != '')
+                ? this.listOfNames![value]
                 : value;
           }
         }
