@@ -279,7 +279,6 @@ class LinkWell extends StatelessWidget {
         textScaleFactor: textScaleFactor,
         textWidthBasis: textWidthBasis,
         textDirection: textDirection,
-        key: key,
         text: TextSpan(children: textSpanWidget),
       ),
     );
