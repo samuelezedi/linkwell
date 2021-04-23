@@ -1,3 +1,7 @@
+## [2.0.6]
+
+* Migrated to null safety
+
 ## [0.1.9]
 
 * Corrected a error, text after every last link was not captured, FIXED
