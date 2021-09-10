@@ -35,6 +35,10 @@ class LinkWell extends StatelessWidget {
   /// This hold the text the user provides
   final String text;
 
+  /// Enable text selection.
+  /// With enableTextSelection set to true LinkWell overflow and softWrap property won't work.
+  final bool enableTextSelection;
+
   /// This hold user defined styling
   /// It's an instanciation of Flutter Widget TextStyle
   final TextStyle? style;
@@ -117,6 +121,7 @@ class LinkWell extends StatelessWidget {
     this.strutStyle,
     this.listOfNames,
     this.textWidthBasis = TextWidthBasis.parent,
+    this.enableTextSelection = false,
   })  : assert(text != null),
         assert(textAlign != null),
         assert(softWrap != null),
@@ -229,7 +234,9 @@ class LinkWell extends StatelessWidget {
 
         var l = value.toString().contains('https://')
             ? value
-            : value.toString().contains('http://') ? value : 'http://' + value;
+            : value.toString().contains('http://')
+                ? value
+                : 'http://' + value;
         var name = l;
 
         if (this.listOfNames != null) {
@@ -269,18 +276,35 @@ class LinkWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: RichText(
-        textAlign: textAlign,
-        locale: locale,
-        maxLines: maxLines,
-        overflow: overflow,
-        strutStyle: strutStyle,
-        softWrap: softWrap,
-        textScaleFactor: textScaleFactor,
-        textWidthBasis: textWidthBasis,
-        textDirection: textDirection,
-        text: TextSpan(children: textSpanWidget),
-      ),
+      child: enableTextSelection
+          ? SelectableText.rich(
+              TextSpan(
+                children: textSpanWidget,
+                style: TextStyle(
+                  locale: locale,
+                ),
+              ),
+              textAlign: textAlign,
+              maxLines: maxLines,
+              //overflow: overflow,
+              strutStyle: strutStyle,
+              //softWrap: softWrap,
+              textScaleFactor: textScaleFactor,
+              textWidthBasis: textWidthBasis,
+              textDirection: textDirection,
+            )
+          : RichText(
+              textAlign: textAlign,
+              locale: locale,
+              maxLines: maxLines,
+              overflow: overflow,
+              strutStyle: strutStyle,
+              softWrap: softWrap,
+              textScaleFactor: textScaleFactor,
+              textWidthBasis: textWidthBasis,
+              textDirection: textDirection,
+              text: TextSpan(children: textSpanWidget),
+            ),
     );
   }
 }
