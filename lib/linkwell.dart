@@ -122,13 +122,7 @@ class LinkWell extends StatelessWidget {
     this.listOfNames,
     this.textWidthBasis = TextWidthBasis.parent,
     this.enableTextSelection = false,
-  })  : assert(text != null),
-        assert(textAlign != null),
-        assert(softWrap != null),
-        assert(overflow != null),
-        assert(textScaleFactor != null),
-        assert(maxLines == null || maxLines > 0),
-        assert(textWidthBasis != null) {
+  }) : assert(maxLines == null || maxLines > 0) {
     /// At construction _initialize function is called
     _initialize();
   }
