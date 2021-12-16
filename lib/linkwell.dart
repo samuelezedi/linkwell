@@ -16,6 +16,8 @@ import 'package:linkwell/src/source.dart';
 /// it help lauches the links and emails when user taps
 import 'package:url_launcher/url_launcher.dart';
 
+typedef LinkWellClickHandler = bool Function(String url);
+
 /// LinkWell class created
 class LinkWell extends StatelessWidget {
   /// The RegEx pattern is created
@@ -97,6 +99,13 @@ class LinkWell extends StatelessWidget {
   /// by default can also be null
   final TextDirection? textDirection;
 
+  /// This optional parameter gives the caller the opportunity to evaluate
+  /// the link prior to LinkWell calling the default click handling
+  /// clickHandler should return 'true' if it processes the click,
+  /// otherwise, if it returns 'false' then LinkWell will call the
+  /// built-in click handler.
+  final LinkWellClickHandler? clickHandler;
+
   /// This hold user defined Widget key
   /// by default can also be null
   final Key? key;
@@ -117,6 +126,7 @@ class LinkWell extends StatelessWidget {
     this.locale,
     this.strutStyle,
     this.listOfNames,
+    this.clickHandler,
     this.textWidthBasis = TextWidthBasis.parent,
   }) : assert(maxLines == null || maxLines > 0) {
     /// At construction _initialize function is called
@@ -218,7 +228,7 @@ class LinkWell extends StatelessWidget {
         var link = TextSpan(
             text: name,
             style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(url));
+            recognizer: new TapGestureRecognizer()..onTap = () => _launch(url));
 
         /// added
         textSpanWidget.add(link);
@@ -244,7 +254,7 @@ class LinkWell extends StatelessWidget {
         var link = TextSpan(
             text: name,
             style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
+            recognizer: new TapGestureRecognizer()..onTap = () => _launch(l));
 
         /// added
         textSpanWidget.add(link);
@@ -264,6 +274,14 @@ class LinkWell extends StatelessWidget {
         }
       }
     });
+  }
+
+  void _launch(url) {
+    var handled = false;
+    if (clickHandler != null) {
+      handled = clickHandler!(url);
+    }
+    if (!handled) launch(url);
   }
 
   @override
