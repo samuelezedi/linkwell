@@ -11,6 +11,7 @@ library linkwell;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:linkwell/src/source.dart';
+// import 'package:cm_utils/string_utils.dart';
 
 /// LinkWell depends on url_launcher plugin
 /// it help lauches the links and emails when user taps
@@ -23,8 +24,18 @@ class LinkWell extends StatelessWidget {
   /// The RegEx pattern is created
   final String? regEx;
 
-  /// This is holds all links when detected
-  final List links = <String>[];
+  // An array of RegEx strings matching different patterms that should
+  // be considered as links.
+  final List<String>? regExLinkPatterns;
+
+  /// This is holds all links found in the text.
+  /// The format is jason:
+  /// {link: 'examplelink.com', location: 20 };
+  ///
+  /// 'link' is the detected link which could be email, url, etc.
+  /// 'location' is the location in the string where the link begins.
+  ///
+  final List<Map<String, dynamic>> links = [];
 
   /// This hold all Names of links provided by the User
   /// this is set to null by default
@@ -114,6 +125,7 @@ class LinkWell extends StatelessWidget {
   LinkWell(
     this.text, {
     this.regEx,
+    this.regExLinkPatterns,
     this.key,
     this.style,
     this.linkStyle,
@@ -135,18 +147,30 @@ class LinkWell extends StatelessWidget {
 
   /// _initialize function
   _initialize() {
-    // Use passed in regular expression string if provided, otherwise default
-    var exp = regEx != null ? RegExp(regEx!) : Helper.regex;
+    // Use passed in regular expression strings if provided, otherwise use default
+    var regexStrings = regExLinkPatterns ?? Helper.defaultLinkRegexStr;
 
-    /// An Iterable with variable name matches
-    /// Is assigned to our regular expression with
-    /// allMatched method cal
-    Iterable<RegExpMatch> matches = exp.allMatches(this.text);
+    regexStrings.forEach((regexStr) {
+      /// An Iterable with variable name matches
+      /// Is assigned to our regular expression with
+      /// allMatched method cal
+      var exp = RegExp(regexStr);
+      Iterable<RegExpMatch> matches = exp.allMatches(this.text);
 
-    /// We now run a forEach Loop to add our matche to
-    /// the links List
-    matches.forEach((match) {
-      this.links.add(text.substring(match.start, match.end));
+      /// We now run a forEach Loop to add our match to
+      /// the links List
+      matches.forEach((match) {
+        this.links.add({
+          'link': text.substring(match.start, match.end),
+          'location': match.start
+        });
+      });
+    });
+
+    // sort links by order found in the text string. Necessary so substitution
+    // works correctly.
+    links.sort((item1, item2) {
+      return item1['location'] - item2['location'];
     });
 
     /// We run a check to know if urls and Emails are found
@@ -184,9 +208,10 @@ class LinkWell extends StatelessWidget {
     var t = this.text;
 
     /// a foreach is run on all the links found
-    this.links.forEach((value) async {
-      /// var wid which represents widget
+    this.links.forEach((linkMap) async {
+      var value = linkMap['link'] as String? ?? '';
 
+      /// var wid which represents widget
       var wid = t.split(value.trim());
 
       /// if not value is found after splitting
@@ -214,7 +239,7 @@ class LinkWell extends StatelessWidget {
 
         String url = params.toString();
 
-        var name = value;
+        String? name = value;
 
         if (this.listOfNames != null) {
           if (this.listOfNames!.containsKey(value)) {
@@ -232,6 +257,18 @@ class LinkWell extends StatelessWidget {
 
         /// added
         textSpanWidget.add(link);
+
+        // TODO: Uncomment here to allow clicking on and calling a phone number.
+        // Must be implemented in custom clickHandler.
+        //
+        // } else if (value.isValidPhoneNumber()) {
+        //   var link = TextSpan(
+        //       text: value,
+        //       style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
+        //       recognizer: new TapGestureRecognizer()
+        //         ..onTap = () => _launch('tel:$value'));
+
+        //   textSpanWidget.add(link);
       } else {
         /// else we let url_laucher know that this is url and not an email
 
@@ -240,7 +277,7 @@ class LinkWell extends StatelessWidget {
             : value.toString().contains('http://')
                 ? value
                 : 'http://' + value;
-        var name = l;
+        String? name = l;
 
         if (this.listOfNames != null) {
           if (this.listOfNames!.containsKey(value)) {
@@ -261,7 +298,7 @@ class LinkWell extends StatelessWidget {
       }
 
       if (wid[1] != '') {
-        if (value == links.last) {
+        if (value == links.last['link']) {
           var text = TextSpan(
             text: wid[1],
             style: style == null ? Helper.defaultTextStyle : style,
@@ -281,7 +318,13 @@ class LinkWell extends StatelessWidget {
     if (clickHandler != null) {
       handled = clickHandler!(url);
     }
-    if (!handled) launch(url);
+    if (!handled) {
+      try {
+        launch(url);
+      } catch (err) {
+        print('Error launching URL: $url. Error = $err');
+      }
+    }
   }
 
   @override

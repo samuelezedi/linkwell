@@ -1,11 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Helper {
   const Helper(this.value);
 
-  static var regex = new RegExp(
-      r"((https?:www\.)|(https?:\/\/)|(www\.))?[\w\-?=%.][-a-zA-Z@:%._\+~#=]{1,256}\.+((com|ru|org|gov|net|ir|in|uk|au|de|ua|edu|io|co))(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
+  static List<String> defaultLinkRegexStr = [
+    // This string will detect url's
+    r'((http|ftp|https):\/\/|www\.)([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
+
+    // This string will detect email addresses
+    r'([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)'
+
+    // TODO: Uncomment here to allow clicking on and calling a phone number.
+    // '(?:\\+?(\\d{1,3}))?[-.(]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?'
+  ];
 
   static var phoneRegex = new RegExp(r"(^(?:[+0]9)?[0-9]{10,12}$)");
 
