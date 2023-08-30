@@ -21,11 +21,8 @@ typedef LinkWellClickHandler = bool Function(String url);
 
 /// LinkWell class created
 class LinkWell extends StatelessWidget {
-  /// The RegEx pattern is created
-  final String? regEx;
-
-  // An array of RegEx strings matching different patterms that should
-  // be considered as links.
+  /// (Optional) Custom regex strings can be passed in [regExLinkPatterns].
+  /// This can be used to replace the built in pattern matching.
   final List<String>? regExLinkPatterns;
 
   /// This is holds all links found in the text.
@@ -124,7 +121,6 @@ class LinkWell extends StatelessWidget {
   /// LinkWell class is constructed here
   LinkWell(
     this.text, {
-    this.regEx,
     this.regExLinkPatterns,
     this.key,
     this.style,
