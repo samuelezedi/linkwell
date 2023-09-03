@@ -10,8 +10,8 @@ library linkwell;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:linkwell/src/source.dart';
-// import 'package:cm_utils/string_utils.dart';
+import 'src/linkwell_helper.dart';
+import 'package:cm_utils/string_utils.dart';
 
 /// LinkWell depends on url_launcher plugin
 /// it help lauches the links and emails when user taps
@@ -38,12 +38,11 @@ class LinkWell extends StatelessWidget {
   /// this is set to null by default
   final Map<String, String>? listOfNames;
 
-  /// This hold TextSpan Widgets List
-  /// which is then placed as child in the RichText Widget
-  final List<InlineSpan> textSpanWidget = <TextSpan>[];
-
   /// This hold the text the user provides
   final String text;
+
+  /// This hold the text the user provides
+  final bool includePhoneLinks;
 
   /// This hold user defined styling
   /// It's an instanciation of Flutter Widget TextStyle
@@ -108,8 +107,8 @@ class LinkWell extends StatelessWidget {
   final TextDirection? textDirection;
 
   /// This optional parameter gives the caller the opportunity to evaluate
-  /// the link prior to LinkWell calling the default click handling
-  /// clickHandler should return 'true' if it processes the click,
+  /// the link prior to LinkWell calling the default click handling.
+  /// 'clickHandler' should return 'true' if it processes the click,
   /// otherwise, if it returns 'false' then LinkWell will call the
   /// built-in click handler.
   final LinkWellClickHandler? clickHandler;
@@ -118,9 +117,14 @@ class LinkWell extends StatelessWidget {
   /// by default can also be null
   final Key? key;
 
+  /// This hold TextSpan Widgets List
+  /// which is then placed as child in the RichText Widget
+  final List<InlineSpan> _textSpanWidget = <TextSpan>[];
+
   /// LinkWell class is constructed here
   LinkWell(
     this.text, {
+    this.includePhoneLinks = false,
     this.regExLinkPatterns,
     this.key,
     this.style,
@@ -143,8 +147,12 @@ class LinkWell extends StatelessWidget {
 
   /// _initialize function
   _initialize() {
+    var regexStrings = <String>[];
+
     // Use passed in regular expression strings if provided, otherwise use default
-    var regexStrings = regExLinkPatterns ?? Helper.defaultLinkRegexStr;
+    regexStrings
+        .addAll(regExLinkPatterns ?? LinkWellHelper.defaultLinkRegexStr);
+    if (includePhoneLinks) regexStrings.add(LinkWellHelper.phoneRegexStr);
 
     regexStrings.forEach((regexStr) {
       /// An Iterable with variable name matches
@@ -189,9 +197,9 @@ class LinkWell extends StatelessWidget {
     /// Adds TextSpan to textSpanWidget
     /// checks if style is null and set deafult style
     /// otherwise set style to user defined
-    textSpanWidget.add(TextSpan(
+    _textSpanWidget.add(TextSpan(
         text: this.text,
-        style: style == null ? Helper.defaultTextStyle : style));
+        style: style == null ? LinkWellHelper.defaultTextStyle : style));
   }
 
   /// _buildBody()
@@ -216,11 +224,11 @@ class LinkWell extends StatelessWidget {
       if (wid[0] != '') {
         var text = TextSpan(
           text: wid[0],
-          style: style == null ? Helper.defaultTextStyle : style,
+          style: style == null ? LinkWellHelper.defaultTextStyle : style,
         );
 
         /// added
-        textSpanWidget.add(text);
+        _textSpanWidget.add(text);
       }
 
       /// when a link is found
@@ -248,23 +256,23 @@ class LinkWell extends StatelessWidget {
 
         var link = TextSpan(
             text: name,
-            style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
             recognizer: new TapGestureRecognizer()..onTap = () => _launch(url));
 
         /// added
-        textSpanWidget.add(link);
+        _textSpanWidget.add(link);
+      } else if (value.isValidPhoneNumber()) {
+        var link = TextSpan(
+            text: value,
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () => _launch('tel:$value'));
 
-        // TODO: Uncomment here to allow clicking on and calling a phone number.
-        // Must be implemented in custom clickHandler.
-        //
-        // } else if (value.isValidPhoneNumber()) {
-        //   var link = TextSpan(
-        //       text: value,
-        //       style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-        //       recognizer: new TapGestureRecognizer()
-        //         ..onTap = () => _launch('tel:$value'));
-
-        //   textSpanWidget.add(link);
+        _textSpanWidget.add(link);
       } else {
         /// else we let url_laucher know that this is url and not an email
 
@@ -286,22 +294,24 @@ class LinkWell extends StatelessWidget {
 
         var link = TextSpan(
             text: name,
-            style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
             recognizer: new TapGestureRecognizer()..onTap = () => _launch(l));
 
         /// added
-        textSpanWidget.add(link);
+        _textSpanWidget.add(link);
       }
 
       if (wid[1] != '') {
         if (value == links.last['link']) {
           var text = TextSpan(
             text: wid[1],
-            style: style == null ? Helper.defaultTextStyle : style,
+            style: style == null ? LinkWellHelper.defaultTextStyle : style,
           );
 
           /// added
-          textSpanWidget.add(text);
+          _textSpanWidget.add(text);
         } else {
           t = wid[1];
         }
@@ -336,7 +346,7 @@ class LinkWell extends StatelessWidget {
         textScaleFactor: textScaleFactor,
         textWidthBasis: textWidthBasis,
         textDirection: textDirection,
-        text: TextSpan(children: textSpanWidget),
+        text: TextSpan(children: _textSpanWidget),
       ),
     );
   }
