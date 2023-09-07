@@ -1,3 +1,4 @@
+import 'package:cm_utils/string_utils.dart';
 import 'package:flutter/material.dart';
 
 class LinkWellHelper {
@@ -9,16 +10,13 @@ class LinkWellHelper {
   ];
 
   // This string will detect email addresses
-  static var emailRegexStr =
-      r'([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)';
+  static var emailRegexStr = CmRegexPatterns.embeddedEmailRegexStr;
 
   // This string will detect url's
-  static var urlRegexStr =
-      r'((http|ftp|https):\/\/|www\.)([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])';
+  static var urlRegexStr = CmRegexPatterns.embeddedUrlRegexStr;
 
   // This string will detect phone numbers.
-  static var phoneRegexStr =
-      r'''(?<=[\s|'"]|^)((?:\+?1?)?[-.(]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4}))(?=[\s.;?'"!]|$)''';
+  static var phoneRegexStr = CmRegexPatterns.embeddedUSPhoneNum;
 
   static var defaultTextStyle = TextStyle(
     fontSize: 17,

@@ -17,7 +17,7 @@ import 'package:cm_utils/string_utils.dart';
 /// it help lauches the links and emails when user taps
 import 'package:url_launcher/url_launcher.dart';
 
-typedef LinkWellClickHandler = bool Function(String url);
+typedef LinkWellClickHandler = Future<bool> Function(String url);
 
 /// LinkWell class created
 class LinkWell extends StatelessWidget {
@@ -281,7 +281,7 @@ class LinkWell extends StatelessWidget {
             : value.toString().contains('http://')
                 ? value
                 : 'http://' + value;
-        String? name = l;
+        String? name = value;
 
         if (this.listOfNames != null) {
           if (this.listOfNames!.containsKey(value)) {
@@ -319,10 +319,10 @@ class LinkWell extends StatelessWidget {
     });
   }
 
-  void _launch(url) {
+  void _launch(url) async {
     var handled = false;
     if (clickHandler != null) {
-      handled = clickHandler!(url);
+      handled = await clickHandler!(url);
     }
     if (!handled) {
       try {
