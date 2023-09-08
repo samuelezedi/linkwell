@@ -41,7 +41,10 @@ class LinkWell extends StatelessWidget {
   /// This hold the text the user provides
   final String text;
 
-  /// This hold the text the user provides
+  /// If true embedded phone numbers will have hyperlinks.
+  /// By default clicking on the number will make a phone call
+  /// through the mobile device's phone dialer. To override the default
+  /// behavior implement [clickHandler].
   final bool includePhoneLinks;
 
   /// This hold user defined styling
