@@ -10,30 +10,42 @@ library linkwell;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:linkwell/src/source.dart';
+import 'src/linkwell_helper.dart';
+import 'package:cm_utils/string_utils.dart';
 
 /// LinkWell depends on url_launcher plugin
 /// it help lauches the links and emails when user taps
 import 'package:url_launcher/url_launcher.dart';
 
+typedef LinkWellClickHandler = Future<bool> Function(String url);
+
 /// LinkWell class created
 class LinkWell extends StatelessWidget {
-  /// The RegEx pattern is created
-  final RegExp exp = Helper.regex;
+  /// (Optional) Custom regex strings can be passed in [regExLinkPatterns].
+  /// This can be used to replace the built in pattern matching.
+  final List<String>? regExLinkPatterns;
 
-  /// This is holds all links when detected
-  final List links = <String>[];
+  /// This is holds all links found in the text.
+  /// The format is jason:
+  /// {link: 'examplelink.com', location: 20 };
+  ///
+  /// 'link' is the detected link which could be email, url, etc.
+  /// 'location' is the location in the string where the link begins.
+  ///
+  final List<Map<String, dynamic>> links = [];
 
   /// This hold all Names of links provided by the User
   /// this is set to null by default
   final Map<String, String>? listOfNames;
 
-  /// This hold TextSpan Widgets List
-  /// which is then placed as child in the RichText Widget
-  final List<InlineSpan> textSpanWidget = <TextSpan>[];
-
   /// This hold the text the user provides
   final String text;
+
+  /// If true embedded phone numbers will have hyperlinks.
+  /// By default clicking on the number will make a phone call
+  /// through the mobile device's phone dialer. To override the default
+  /// behavior implement [clickHandler].
+  final bool includePhoneLinks;
 
   /// This hold user defined styling
   /// It's an instanciation of Flutter Widget TextStyle
@@ -97,13 +109,26 @@ class LinkWell extends StatelessWidget {
   /// by default can also be null
   final TextDirection? textDirection;
 
+  /// This optional parameter gives the caller the opportunity to evaluate
+  /// the link prior to LinkWell calling the default click handling.
+  /// 'clickHandler' should return 'true' if it processes the click,
+  /// otherwise, if it returns 'false' then LinkWell will call the
+  /// built-in click handler.
+  final LinkWellClickHandler? clickHandler;
+
   /// This hold user defined Widget key
   /// by default can also be null
   final Key? key;
 
+  /// This hold TextSpan Widgets List
+  /// which is then placed as child in the RichText Widget
+  final List<InlineSpan> _textSpanWidget = <TextSpan>[];
+
   /// LinkWell class is constructed here
   LinkWell(
     this.text, {
+    this.includePhoneLinks = false,
+    this.regExLinkPatterns,
     this.key,
     this.style,
     this.linkStyle,
@@ -116,29 +141,43 @@ class LinkWell extends StatelessWidget {
     this.locale,
     this.strutStyle,
     this.listOfNames,
+    this.clickHandler,
     this.textWidthBasis = TextWidthBasis.parent,
-  })  : assert(text != null),
-        assert(textAlign != null),
-        assert(softWrap != null),
-        assert(overflow != null),
-        assert(textScaleFactor != null),
-        assert(maxLines == null || maxLines > 0),
-        assert(textWidthBasis != null) {
+  }) : assert(maxLines == null || maxLines > 0) {
     /// At construction _initialize function is called
     _initialize();
   }
 
   /// _initialize function
   _initialize() {
-    /// An Iterable with variable name matches
-    /// Is assigned to our regular expression with
-    /// allMatched method call
-    Iterable<RegExpMatch> matches = exp.allMatches(this.text);
+    var regexStrings = <String>[];
 
-    /// We now run a forEach Loop to add our matche to
-    /// the links List
-    matches.forEach((match) {
-      this.links.add(text.substring(match.start, match.end));
+    // Use passed in regular expression strings if provided, otherwise use default
+    regexStrings
+        .addAll(regExLinkPatterns ?? LinkWellHelper.defaultLinkRegexStr);
+    if (includePhoneLinks) regexStrings.add(LinkWellHelper.phoneRegexStr);
+
+    regexStrings.forEach((regexStr) {
+      /// An Iterable with variable name matches
+      /// Is assigned to our regular expression with
+      /// allMatched method cal
+      var exp = RegExp(regexStr);
+      Iterable<RegExpMatch> matches = exp.allMatches(this.text);
+
+      /// We now run a forEach Loop to add our match to
+      /// the links List
+      matches.forEach((match) {
+        this.links.add({
+          'link': text.substring(match.start, match.end),
+          'location': match.start
+        });
+      });
+    });
+
+    // sort links by order found in the text string. Necessary so substitution
+    // works correctly.
+    links.sort((item1, item2) {
+      return item1['location'] - item2['location'];
     });
 
     /// We run a check to know if urls and Emails are found
@@ -161,9 +200,9 @@ class LinkWell extends StatelessWidget {
     /// Adds TextSpan to textSpanWidget
     /// checks if style is null and set deafult style
     /// otherwise set style to user defined
-    textSpanWidget.add(TextSpan(
+    _textSpanWidget.add(TextSpan(
         text: this.text,
-        style: style == null ? Helper.defaultTextStyle : style));
+        style: style == null ? LinkWellHelper.defaultTextStyle : style));
   }
 
   /// _buildBody()
@@ -176,9 +215,10 @@ class LinkWell extends StatelessWidget {
     var t = this.text;
 
     /// a foreach is run on all the links found
-    this.links.forEach((value) async {
-      /// var wid which represents widget
+    this.links.forEach((linkMap) async {
+      var value = linkMap['link'] as String? ?? '';
 
+      /// var wid which represents widget
       var wid = t.split(value.trim());
 
       /// if not value is found after splitting
@@ -187,11 +227,11 @@ class LinkWell extends StatelessWidget {
       if (wid[0] != '') {
         var text = TextSpan(
           text: wid[0],
-          style: style == null ? Helper.defaultTextStyle : style,
+          style: style == null ? LinkWellHelper.defaultTextStyle : style,
         );
 
         /// added
-        textSpanWidget.add(text);
+        _textSpanWidget.add(text);
       }
 
       /// when a link is found
@@ -206,7 +246,7 @@ class LinkWell extends StatelessWidget {
 
         String url = params.toString();
 
-        var name = value;
+        String? name = value;
 
         if (this.listOfNames != null) {
           if (this.listOfNames!.containsKey(value)) {
@@ -219,18 +259,32 @@ class LinkWell extends StatelessWidget {
 
         var link = TextSpan(
             text: name,
-            style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(url));
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
+            recognizer: new TapGestureRecognizer()..onTap = () => _launch(url));
 
         /// added
-        textSpanWidget.add(link);
+        _textSpanWidget.add(link);
+      } else if (value.isValidPhoneNumber()) {
+        var link = TextSpan(
+            text: value,
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () => _launch('tel:$value'));
+
+        _textSpanWidget.add(link);
       } else {
         /// else we let url_laucher know that this is url and not an email
 
         var l = value.toString().contains('https://')
             ? value
-            : value.toString().contains('http://') ? value : 'http://' + value;
-        var name = l;
+            : value.toString().contains('http://')
+                ? value
+                : 'http://' + value;
+        String? name = value;
 
         if (this.listOfNames != null) {
           if (this.listOfNames!.containsKey(value)) {
@@ -243,27 +297,43 @@ class LinkWell extends StatelessWidget {
 
         var link = TextSpan(
             text: name,
-            style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
+            style: linkStyle == null
+                ? LinkWellHelper.linkDefaultTextStyle
+                : linkStyle,
+            recognizer: new TapGestureRecognizer()..onTap = () => _launch(l));
 
         /// added
-        textSpanWidget.add(link);
+        _textSpanWidget.add(link);
       }
 
       if (wid[1] != '') {
-        if (value == links.last) {
+        if (value == links.last['link']) {
           var text = TextSpan(
             text: wid[1],
-            style: style == null ? Helper.defaultTextStyle : style,
+            style: style == null ? LinkWellHelper.defaultTextStyle : style,
           );
 
           /// added
-          textSpanWidget.add(text);
+          _textSpanWidget.add(text);
         } else {
           t = wid[1];
         }
       }
     });
+  }
+
+  void _launch(url) async {
+    var handled = false;
+    if (clickHandler != null) {
+      handled = await clickHandler!(url);
+    }
+    if (!handled) {
+      try {
+        launch(url);
+      } catch (err) {
+        print('Error launching URL: $url. Error = $err');
+      }
+    }
   }
 
   @override
@@ -279,7 +349,7 @@ class LinkWell extends StatelessWidget {
         textScaleFactor: textScaleFactor,
         textWidthBasis: textWidthBasis,
         textDirection: textDirection,
-        text: TextSpan(children: textSpanWidget),
+        text: TextSpan(children: _textSpanWidget),
       ),
     );
   }
