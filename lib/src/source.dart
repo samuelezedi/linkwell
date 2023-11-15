@@ -5,7 +5,7 @@ class Helper {
   const Helper(this.value);
 
   static var regex = RegExp(
-      r"((https?:www\.)|(https?:\/\/)|(www\.))?[\w/\-?=%.][-a-zA-Z0-9@:%._\+~#=]{1,256}\.(com|net|org|edu|gov|mil|int|biz|info|jobs|mobi|name|aero|coop|asia|tel|travel|museum|arpa|pro)");
+      r"[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)");
 
   static var phoneRegex = new RegExp(r"(^(?:[+0]9)?[0-9]{10,12}$)");
 
