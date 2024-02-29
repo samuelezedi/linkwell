@@ -1,12 +1,11 @@
 name: linkwell
 description: LinkWell is Text Plugin that detects URLs and Emails in a String and when tapped opens in users browsers,
-version: 2.0.6
-authors:
-  - samuelezedi@gmail.com
-homepage: https://github.com/samuelezedi/linkwell
+version: 3.0.0
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:

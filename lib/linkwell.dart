@@ -79,11 +79,11 @@ class LinkWell extends StatelessWidget {
   /// by default this is set to null
   final bool softWrap;
 
-  /// This hold user defined textScaleFactor
+  /// This hold user defined textScaler
   /// because LinkWell makes user of Flutter RichText Widget
-  /// it also gives user the option to create textScaleFactor
+  /// it also gives user the option to create textScaler
   /// by default can also be null
-  final double textScaleFactor;
+  final TextScaler textScaler;
 
   /// This hold user defined textScaleFactor
   /// because LinkWell makes user of Flutter RichText Widget
@@ -111,19 +111,13 @@ class LinkWell extends StatelessWidget {
     this.textDirection,
     this.softWrap = true,
     this.overflow = TextOverflow.clip,
-    this.textScaleFactor = 1.0,
+    this.textScaler = TextScaler.noScaling,
     this.maxLines,
     this.locale,
     this.strutStyle,
     this.listOfNames,
     this.textWidthBasis = TextWidthBasis.parent,
-  })  : assert(text != null),
-        assert(textAlign != null),
-        assert(softWrap != null),
-        assert(overflow != null),
-        assert(textScaleFactor != null),
-        assert(maxLines == null || maxLines > 0),
-        assert(textWidthBasis != null) {
+  }) : assert(maxLines == null || maxLines > 0) {
     /// At construction _initialize function is called
     _initialize();
   }
@@ -220,7 +214,8 @@ class LinkWell extends StatelessWidget {
         var link = TextSpan(
             text: name,
             style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(url));
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () => launchUrl(Uri.parse(url)));
 
         /// added
         textSpanWidget.add(link);
@@ -229,7 +224,9 @@ class LinkWell extends StatelessWidget {
 
         var l = value.toString().contains('https://')
             ? value
-            : value.toString().contains('http://') ? value : 'http://' + value;
+            : value.toString().contains('http://')
+                ? value
+                : 'http://' + value;
         var name = l;
 
         if (this.listOfNames != null) {
@@ -244,7 +241,7 @@ class LinkWell extends StatelessWidget {
         var link = TextSpan(
             text: name,
             style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
-            recognizer: new TapGestureRecognizer()..onTap = () => launch(l));
+            recognizer: new TapGestureRecognizer()..onTap = () => launchUrl(Uri.parse(l.toString())));
 
         /// added
         textSpanWidget.add(link);
@@ -276,7 +273,7 @@ class LinkWell extends StatelessWidget {
         overflow: overflow,
         strutStyle: strutStyle,
         softWrap: softWrap,
-        textScaleFactor: textScaleFactor,
+        textScaler: textScaler,
         textWidthBasis: textWidthBasis,
         textDirection: textDirection,
         text: TextSpan(children: textSpanWidget),
