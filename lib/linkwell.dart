@@ -193,12 +193,10 @@ class LinkWell extends StatelessWidget {
       /// so we can instruct url_launcher
       /// that this is an email
       if (value.toString().contains('@') && !value.toString().contains('/')) {
-        final Uri params = Uri(
+        final Uri uri = Uri(
           scheme: 'mailto',
           path: value,
         );
-
-        String url = params.toString();
 
         var name = value;
 
@@ -215,7 +213,7 @@ class LinkWell extends StatelessWidget {
             text: name,
             style: linkStyle == null ? Helper.linkDefaultTextStyle : linkStyle,
             recognizer: new TapGestureRecognizer()
-              ..onTap = () => launchUrl(Uri.parse(url)));
+              ..onTap = () => launchUrl(uri));
 
         /// added
         textSpanWidget.add(link);
